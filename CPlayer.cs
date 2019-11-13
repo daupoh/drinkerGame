@@ -51,5 +51,10 @@ namespace DrinkerGame
                 sName = value;
             }
         }
+        public void ClearCards()
+        {
+            aPoolCards.Clear();
+            aSourceCards.Clear();
+        }
     }
 }

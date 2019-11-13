@@ -12,7 +12,7 @@ namespace DrinkerGame
         const string FILE_NAME = "cards.png";
         enum CardSuit
         {
-            Hearts,Diamonds, Clubs, Spades
+            Hearts,Diamonds, Clubs, Spades, Special
         }
         enum TypeOfCard
         {
@@ -50,6 +50,10 @@ namespace DrinkerGame
             Graphics g = Graphics.FromImage(bmp);
             g.DrawImage(src, 0, 0, rect, GraphicsUnit.Pixel); //перерисовываем с источника по координатам
             return bmp;
+        }
+        public CCard FaceDownCard()
+        {
+            return new CCard(4,)
         }
         private CCard(int iSuit, int iType, int iCard, int iCardImageColumn)
         {

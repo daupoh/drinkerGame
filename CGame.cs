@@ -41,7 +41,19 @@ namespace DrinkerGame
             rAntagonist = new CPlayer(AntagonistName);
             rProtagonist = new CPlayer(ProtagonistName);
             rDeck = new CDeck(iTypeOfDecks, iCountOfDecks);
-            GameSpeed = 1;           
+            GameSpeed = 1;
+            CCard[] aCards = rDeck.GenerateDeck();
+            for (int i = 0; i < aCards.Length; i++)
+            {
+                if (i %2 ==0)
+                {
+                    rAntagonist.GetCardToPool(aCards[i]);
+                }
+                else
+                {
+                    rProtagonist.GetCardToSource(aCards[i]);
+                }
+            }
             eStatus = GameStatus.Sutdown;
         }
         public string ProtagonistName
@@ -66,7 +78,7 @@ namespace DrinkerGame
                 rAntagonist.Name = value;
             }
         }
-        public CDeck.TypeOfDeck Type
+        public int Type
         {
             get
             {
