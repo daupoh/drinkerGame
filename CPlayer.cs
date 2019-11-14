@@ -30,8 +30,13 @@ namespace DrinkerGame
             }
             else if (aSourceCards.Count>0)
             {
-                rCard = aSourceCards.Pop();
-            }
+                foreach (CCard rTempCard in aSourceCards)
+                {
+                    aPoolCards.Push(rTempCard);
+                }
+                aSourceCards.Clear();
+                rCard = aPoolCards.Pop();
+            }            
             return rCard;
         }
         public void GetCardToSource(CCard rCard)

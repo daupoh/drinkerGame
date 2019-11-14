@@ -16,7 +16,7 @@ namespace DrinkerGame
         }
         enum TypeOfCard
         {
-            SmallNumber,Number,Rank,Jocker
+            SmallNumber,Number,Rank,Jocker, FaceDown
         }
         enum RanksCard
         {
@@ -51,9 +51,9 @@ namespace DrinkerGame
             g.DrawImage(src, 0, 0, rect, GraphicsUnit.Pixel); //перерисовываем с источника по координатам
             return bmp;
         }
-        public CCard FaceDownCard()
+        public static CCard FaceDownCard()
         {
-            return new CCard(4,)
+            return new CCard(4, 4, 0, 0);
         }
         private CCard(int iSuit, int iType, int iCard, int iCardImageColumn)
         {

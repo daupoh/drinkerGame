@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,29 +10,96 @@ namespace DrinkerGame
 {
     class CGame
     {
-        enum GameStatus
+        int iGameSpeedMod;        
+        public enum AtackResults
         {
-            Run, Pause, Sutdown
+            NoResult, ProtagonistAtack, AntagonistAtack, ProtagonistDefend, AntagonistDefend, ProtagonistSupport, AntagonistSupport
+                ,Win, Draw,AntagonistGameOver, ProtagonistGameOver
         }
-        GameStatus eStatus;
-        int iGameSpeedMod;      
+        enum AtackTypes
+        {
+            ProtagonistAtack, AntagonistAtack, ProtagonistDefend, AntagonistDefend, ProtagonistSupport, AntagonistSupport
+        }
+        AtackResults eAtackResult;
+        AtackTypes eAtackType;
         CPlayer rAntagonist, rProtagonist;
+        CCard rAtackAntagonistCard, rAtackProtagonistCard, rSuportAntagonistFirstCard, rSuportAntagonistSecondCard, 
+            rSuportProtagonistFirstCard, rSuportProtagonistSecondCard;
+        Stack<CCard> rBankCards = new Stack<CCard>();
         CDeck rDeck;
         
         public CGame()
         {
             PrepareGame("Протагонист", "Антагонист", 0, 1);            
         }
-        public int Atack()
-        {
-            int iResultOfAtack = -1;
+        public AtackResults Atack()
+        {           
+            switch (eAtackType)
+            {
+                case AtackTypes.ProtagonistAtack:
+                    rAtackProtagonistCard = rProtagonist.TakeCard();
+                    if (rAtackProtagonistCard == null)
+                    {
+                        eAtackResult = AtackResults.ProtagonistGameOver;
+                    }
+                    else
+                    {
+                        eAtackType = AtackTypes.AntagonistDefend;
+                    }
+                    break;                    
+                case AtackTypes.AntagonistAtack:
+                    rAtackAntagonistCard = rAntagonist.TakeCard();
+                    if (rAtackAntagonistCard == null)
+                    {
+                        eAtackResult = AtackResults.AntagonistGameOver;
+                    }
+                    else
+                    {
+                        eAtackType = AtackTypes.ProtagonistDefend;
+                    }
+                    break;
+                case AtackTypes.AntagonistDefend:
+                    rAtackProtagonistCard = rProtagonist.TakeCard();
+                    if (rAtackProtagonistCard == null)
+                    {
+                        eAtackResult = AtackResults.ProtagonistGameOver;
+                    }
+                    else
+                    {
+                        int iResultComparing = rAtackAntagonistCard.Compare(rAtackProtagonistCard);
+                        if (iResultComparing == -1) 
+                        {
+                            
+                        }
+                        else if (iResultComparing==0)
+                        {                            
+                            eAtackType = AtackTypes.ProtagonistSupport;
+                        }
+                        else
+                        {
 
-            return iResultOfAtack;
+                        }
+
+                        eAtackType = AtackTypes.AntagonistDefend;
+                    }
+                    break;
+                case AtackTypes.ProtagonistDefend: break;
+                case AtackTypes.ProtagonistSupport: break;
+                case AtackTypes.AntagonistSupport: break;
+            }
+           
+            return eAtackResult;
         }
+        private void AllBank()
+        {
+
+        }
+      
         public int SupportAtack()
         {
             int iResultOfAtack = -1;
 
+            
             return iResultOfAtack;
         }        
        
@@ -43,6 +111,8 @@ namespace DrinkerGame
             rDeck = new CDeck(iTypeOfDecks, iCountOfDecks);
             GameSpeed = 1;
             CCard[] aCards = rDeck.GenerateDeck();
+            rAntagonist.ClearCards();
+            rProtagonist.ClearCards();
             for (int i = 0; i < aCards.Length; i++)
             {
                 if (i %2 ==0)
@@ -54,7 +124,16 @@ namespace DrinkerGame
                     rProtagonist.GetCardToSource(aCards[i]);
                 }
             }
-            eStatus = GameStatus.Sutdown;
+            rBankCards.Clear();
+            eAtackResult = AtackResults.NoResult;
+            eAtackType = AtackTypes.ProtagonistAtack;
+        }
+        public Bitmap FaceDownCard
+        {
+            get
+            {
+                return CCard.FaceDownCard().CardImage;
+            }
         }
         public string ProtagonistName
         {
@@ -112,18 +191,7 @@ namespace DrinkerGame
                 iGameSpeedMod = value;
             }
         }
-        public int Status
-        {
-            get
-            {
-                return (int)eStatus;
-            }
-            set
-            {
-                Assert.IsTrue(value < 3);
-                eStatus = (GameStatus)value;
-            }
-        }
+    
     }
 }
 
