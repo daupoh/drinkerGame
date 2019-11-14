@@ -12,16 +12,14 @@ namespace DrinkerGame
     {
         int iGameSpeedMod;        
         public enum AtackResults
-        {
-            NoResult, ProtagonistAtack, AntagonistAtack, ProtagonistDefend, AntagonistDefend, ProtagonistSupport, AntagonistSupport
-                ,Win, Draw,AntagonistGameOver, ProtagonistGameOver
-        }
-        enum AtackTypes
-        {
-            ProtagonistAtack, AntagonistAtack, ProtagonistDefend, AntagonistDefend, ProtagonistSupport, AntagonistSupport
-        }
-        AtackResults eAtackResult;
-        AtackTypes eAtackType;
+        {          
+            ProtagonistAtack, AntagonistAtack,
+            ProtagonistSupportFirst, AntagonistSupportFirst,
+            ProtagonistSupportSecond, AntagonistSupportSecond,
+            ProtagonistWin, ProtagonistDraw, AntagonistWin, AntagonistDraw,
+            AntagonistGameOver, ProtagonistGameOver
+        }      
+        AtackResults eAtackResult;      
         CPlayer rAntagonist, rProtagonist;
         CCard rAtackAntagonistCard, rAtackProtagonistCard, rSuportAntagonistFirstCard, rSuportAntagonistSecondCard, 
             rSuportProtagonistFirstCard, rSuportProtagonistSecondCard;
@@ -32,11 +30,11 @@ namespace DrinkerGame
         {
             PrepareGame("Протагонист", "Антагонист", 0, 1);            
         }
-        public AtackResults Atack()
+        public AtackResults GameMove()
         {           
-            switch (eAtackType)
+            switch (eAtackResult)
             {
-                case AtackTypes.ProtagonistAtack:
+                case AtackResults.ProtagonistAtack:
                     rAtackProtagonistCard = rProtagonist.TakeCard();
                     if (rAtackProtagonistCard == null)
                     {
@@ -44,10 +42,29 @@ namespace DrinkerGame
                     }
                     else
                     {
-                        eAtackType = AtackTypes.AntagonistDefend;
+                        if (NormalAtack())
+                        {
+                            eAtackResult = AtackResults.AntagonistAtack;
+                        }
+                        else 
+                        {
+                            int iResultComparing = rAtackAntagonistCard.Compare(rAtackProtagonistCard);
+                            if (iResultComparing == -1)
+                            {
+                                eAtackResult = AtackResults.ProtagonistWin;
+                            }
+                            else if (iResultComparing == 0)
+                            {
+                                eAtackResult = AtackResults.AntagonistSupportFirst;
+                            }
+                            else
+                            {
+                                eAtackResult = AtackResults.AntagonistWin;
+                            }                          
+                        }
                     }
                     break;                    
-                case AtackTypes.AntagonistAtack:
+                case AtackResults.AntagonistAtack:
                     rAtackAntagonistCard = rAntagonist.TakeCard();
                     if (rAtackAntagonistCard == null)
                     {
@@ -55,37 +72,32 @@ namespace DrinkerGame
                     }
                     else
                     {
-                        eAtackType = AtackTypes.ProtagonistDefend;
-                    }
-                    break;
-                case AtackTypes.AntagonistDefend:
-                    rAtackProtagonistCard = rProtagonist.TakeCard();
-                    if (rAtackProtagonistCard == null)
-                    {
-                        eAtackResult = AtackResults.ProtagonistGameOver;
-                    }
-                    else
-                    {
-                        int iResultComparing = rAtackAntagonistCard.Compare(rAtackProtagonistCard);
-                        if (iResultComparing == -1) 
+                        if (NormalAtack())
                         {
-                            
-                        }
-                        else if (iResultComparing==0)
-                        {                            
-                            eAtackType = AtackTypes.ProtagonistSupport;
+                            eAtackResult = AtackResults.ProtagonistAtack;
                         }
                         else
                         {
-
+                            int iResultComparing = rAtackAntagonistCard.Compare(rAtackProtagonistCard);
+                            if (iResultComparing == -1)
+                            {
+                                eAtackResult = AtackResults.ProtagonistWin;
+                            }
+                            else if (iResultComparing == 0)
+                            {
+                                eAtackResult = AtackResults.ProtagonistSupportFirst;
+                            }
+                            else
+                            {
+                                eAtackResult = AtackResults.AntagonistWin;
+                            }
                         }
-
-                        eAtackType = AtackTypes.AntagonistDefend;
                     }
+                    break;               
+                case AtackResults.ProtagonistSupportFirst:
+
                     break;
-                case AtackTypes.ProtagonistDefend: break;
-                case AtackTypes.ProtagonistSupport: break;
-                case AtackTypes.AntagonistSupport: break;
+                case AtackResults.AntagonistSupportFirst: break;
             }
            
             return eAtackResult;
@@ -94,14 +106,23 @@ namespace DrinkerGame
         {
 
         }
-      
-        public int SupportAtack()
+        private void Comparing(AtackResults eDrawResult)
         {
-            int iResultOfAtack = -1;
 
-            
-            return iResultOfAtack;
-        }        
+        }
+      private bool NormalAtack()
+        {
+            return (rAtackAntagonistCard == null || rAtackProtagonistCard == null);
+        }
+        private bool FirstSupportAtack()
+        {
+            return (rSuportAntagonistFirstCard == null || rSuportProtagonistFirstCard == null);
+        }
+        private bool SecondSupportAtack()
+        {
+            return (rSuportAntagonistSecondCard == null || rSuportProtagonistSecondCard == null);
+        }
+       
        
         public void PrepareGame(string ProtagonistName, string AntagonistName,
             int iTypeOfDecks, int iCountOfDecks)
@@ -125,8 +146,7 @@ namespace DrinkerGame
                 }
             }
             rBankCards.Clear();
-            eAtackResult = AtackResults.NoResult;
-            eAtackType = AtackTypes.ProtagonistAtack;
+            eAtackResult = AtackResults.ProtagonistAtack;            
         }
         public Bitmap FaceDownCard
         {
