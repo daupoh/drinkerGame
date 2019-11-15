@@ -12,9 +12,43 @@ namespace DrinkerGame
         string sName;
         readonly Stack<CCard> aPoolCards = new Stack<CCard>();
         readonly Stack<CCard> aSourceCards = new Stack<CCard>();
+        CCard rAtackCard, rSupportCardFirst, rSupportCardSecond;
         public CPlayer(string sName)
         {
             Name = sName;
+        }
+        public CCard AtackCard
+        {
+            get
+            {
+                return rAtackCard;
+            }
+            set
+            {
+                rAtackCard = value;
+            }
+        }
+        public CCard SupportFirst
+        {
+            get
+            {
+                return rSupportCardFirst;
+            }
+            set
+            {
+                rSupportCardFirst = value;
+            }
+        }
+        public CCard SupportSecond
+        {
+            get
+            {
+                return rSupportCardSecond;
+            }
+            set
+            {
+                rSupportCardSecond = value;
+            }
         }
         public void GetCardToPool(CCard rCard)
         {
@@ -60,6 +94,20 @@ namespace DrinkerGame
         {
             aPoolCards.Clear();
             aSourceCards.Clear();
+        }
+        public int CountOfPool
+        {
+            get 
+            {
+                return aPoolCards.Count;
+            }
+        }
+        public int CountOfSource
+        {
+            get
+            {
+                return aSourceCards.Count;
+            }
         }
     }
 }

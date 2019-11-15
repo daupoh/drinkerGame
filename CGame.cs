@@ -11,119 +11,24 @@ namespace DrinkerGame
     class CGame
     {
         int iGameSpeedMod;        
-        public enum AtackResults
+        enum MoveTurn
+        {
+            Protagonist,Antagonist,Game
+        }
+        public enum PlayersStatus
         {          
-            ProtagonistAtack, AntagonistAtack,
-            ProtagonistSupportFirst, AntagonistSupportFirst,
-            ProtagonistSupportSecond, AntagonistSupportSecond,
-            ProtagonistWin, ProtagonistDraw, AntagonistWin, AntagonistDraw,
-            AntagonistGameOver, ProtagonistGameOver
-        }      
-        AtackResults eAtackResult;      
-        CPlayer rAntagonist, rProtagonist;
-        CCard rAtackAntagonistCard, rAtackProtagonistCard, rSuportAntagonistFirstCard, rSuportAntagonistSecondCard, 
-            rSuportProtagonistFirstCard, rSuportProtagonistSecondCard;
-        Stack<CCard> rBankCards = new Stack<CCard>();
+            NoStatus, Atack, Support, GameOver
+        }
+        MoveTurn eTurn;
+        PlayersStatus eStatus;
+        CPlayer rAntagonist, rProtagonist;      
+        Stack<CCard> aBankCards = new Stack<CCard>();
         CDeck rDeck;
         
         public CGame()
         {
             PrepareGame("Протагонист", "Антагонист", 0, 1);            
         }
-        public AtackResults GameMove()
-        {           
-            switch (eAtackResult)
-            {
-                case AtackResults.ProtagonistAtack:
-                    rAtackProtagonistCard = rProtagonist.TakeCard();
-                    if (rAtackProtagonistCard == null)
-                    {
-                        eAtackResult = AtackResults.ProtagonistGameOver;
-                    }
-                    else
-                    {
-                        if (NormalAtack())
-                        {
-                            eAtackResult = AtackResults.AntagonistAtack;
-                        }
-                        else 
-                        {
-                            int iResultComparing = rAtackAntagonistCard.Compare(rAtackProtagonistCard);
-                            if (iResultComparing == -1)
-                            {
-                                eAtackResult = AtackResults.ProtagonistWin;
-                            }
-                            else if (iResultComparing == 0)
-                            {
-                                eAtackResult = AtackResults.AntagonistSupportFirst;
-                            }
-                            else
-                            {
-                                eAtackResult = AtackResults.AntagonistWin;
-                            }                          
-                        }
-                    }
-                    break;                    
-                case AtackResults.AntagonistAtack:
-                    rAtackAntagonistCard = rAntagonist.TakeCard();
-                    if (rAtackAntagonistCard == null)
-                    {
-                        eAtackResult = AtackResults.AntagonistGameOver;
-                    }
-                    else
-                    {
-                        if (NormalAtack())
-                        {
-                            eAtackResult = AtackResults.ProtagonistAtack;
-                        }
-                        else
-                        {
-                            int iResultComparing = rAtackAntagonistCard.Compare(rAtackProtagonistCard);
-                            if (iResultComparing == -1)
-                            {
-                                eAtackResult = AtackResults.ProtagonistWin;
-                            }
-                            else if (iResultComparing == 0)
-                            {
-                                eAtackResult = AtackResults.ProtagonistSupportFirst;
-                            }
-                            else
-                            {
-                                eAtackResult = AtackResults.AntagonistWin;
-                            }
-                        }
-                    }
-                    break;               
-                case AtackResults.ProtagonistSupportFirst:
-
-                    break;
-                case AtackResults.AntagonistSupportFirst: break;
-            }
-           
-            return eAtackResult;
-        }
-        private void AllBank()
-        {
-
-        }
-        private void Comparing(AtackResults eDrawResult)
-        {
-
-        }
-      private bool NormalAtack()
-        {
-            return (rAtackAntagonistCard == null || rAtackProtagonistCard == null);
-        }
-        private bool FirstSupportAtack()
-        {
-            return (rSuportAntagonistFirstCard == null || rSuportProtagonistFirstCard == null);
-        }
-        private bool SecondSupportAtack()
-        {
-            return (rSuportAntagonistSecondCard == null || rSuportProtagonistSecondCard == null);
-        }
-       
-       
         public void PrepareGame(string ProtagonistName, string AntagonistName,
             int iTypeOfDecks, int iCountOfDecks)
         {
@@ -136,7 +41,7 @@ namespace DrinkerGame
             rProtagonist.ClearCards();
             for (int i = 0; i < aCards.Length; i++)
             {
-                if (i %2 ==0)
+                if (i % 2 == 0)
                 {
                     rAntagonist.GetCardToPool(aCards[i]);
                 }
@@ -145,16 +50,10 @@ namespace DrinkerGame
                     rProtagonist.GetCardToSource(aCards[i]);
                 }
             }
-            rBankCards.Clear();
-            eAtackResult = AtackResults.ProtagonistAtack;            
-        }
-        public Bitmap FaceDownCard
-        {
-            get
-            {
-                return CCard.FaceDownCard().CardImage;
-            }
-        }
+            aBankCards.Clear();
+            eTurn = MoveTurn.Protagonist;
+            eStatus = PlayersStatus.NoStatus;
+        }        
         public string ProtagonistName
         {
             get
@@ -211,6 +110,191 @@ namespace DrinkerGame
                 iGameSpeedMod = value;
             }
         }
+        public Bitmap FaceDownCard
+        {
+            get
+            {
+                return CCard.FaceDownCard().CardImage;
+            }
+        }
+        public int[] DeskDecksCountOfCards
+        {
+            get
+            {
+                int[] aCounts = new int[5];
+                aCounts[0] = rProtagonist.CountOfPool;
+                aCounts[1] = rProtagonist.CountOfSource;
+                aCounts[2] = rAntagonist.CountOfPool;
+                aCounts[3] = rAntagonist.CountOfSource;
+                aCounts[4] = aBankCards.Count;
+                return aCounts;
+            }
+        }  
+        public PlayersStatus Status
+        {
+            get
+            {
+                return eStatus;
+            }
+        }
+        public void Move()
+        {
+            switch (eTurn)
+            {
+                case MoveTurn.Protagonist:
+                    PlayerMove(rProtagonist);   
+                    break;
+                case MoveTurn.Antagonist:
+                    PlayerMove(rAntagonist);
+                    break;                
+                case MoveTurn.Game:
+                    GameMove();
+                    break;
+            }
+        }
+        private void PlayerMove(CPlayer rPlayer)
+        {
+            if (rPlayer.AtackCard == null)
+            {
+                CCard rCard = rPlayer.TakeCard();
+                if (rCard == null)
+                {
+                    eStatus = PlayersStatus.GameOver;
+                }
+                else
+                {
+                    rPlayer.AtackCard = rCard;
+                    eStatus = PlayersStatus.Atack;
+                }
+            }
+            else if (rPlayer.SupportFirst == null)
+            {
+                CCard rFirstCard = rPlayer.TakeCard(),
+                    rSecondCard = rPlayer.TakeCard();
+                if (rFirstCard == null)
+                {
+                    eStatus = PlayersStatus.GameOver;
+                }
+                else if (rSecondCard == null)
+                {
+                    rPlayer.SupportFirst = rFirstCard;
+                    eStatus = PlayersStatus.GameOver;
+                }
+                else
+                {
+                    rPlayer.SupportFirst = rFirstCard;
+                    rPlayer.SupportSecond = rSecondCard;
+                    eStatus = PlayersStatus.Support;
+                }
+            }
+            eTurn = MoveTurn.Game;
+        }
+        private void GameMove()
+        {
+           switch (eStatus)
+            {
+                case PlayersStatus.Atack:
+                    if (rAntagonist.AtackCard == null)
+                    {
+                        eTurn = MoveTurn.Antagonist;
+                    }
+                    else if (rProtagonist.AtackCard == null)
+                    {
+                        eTurn = MoveTurn.Protagonist;
+                    }
+                    else
+                    {                        
+                        int iResultAtack = rProtagonist.AtackCard.Compare(rAntagonist.AtackCard);
+                        if (iResultAtack == -1)
+                        {
+                            CardsToBank();
+                            TakeBank(rAntagonist);
+                            eTurn = MoveTurn.Antagonist;
+                        }
+                        else if (iResultAtack == 0)
+                        {
+                            eTurn = MoveTurn.Protagonist;
+                        }
+                        else
+                        {
+                            CardsToBank();
+                            TakeBank(rProtagonist);
+                            eTurn = MoveTurn.Protagonist;
+                        }
+                    }
+                    break;
+
+                case PlayersStatus.Support:
+                    if (rAntagonist.SupportFirst == null)
+                    {
+                        eTurn = MoveTurn.Antagonist;
+                    }
+                    else if (rProtagonist.SupportFirst == null)
+                    {
+                        eTurn = MoveTurn.Protagonist;
+                    }
+                    else
+                    {
+                        int iSumResults = rProtagonist.SupportFirst.Compare(rAntagonist.SupportFirst) + rProtagonist.SupportSecond.Compare(rAntagonist.SupportSecond);
+                        if (iSumResults<0)
+                        {
+                            CardsToBank();
+                            TakeBank(rAntagonist);
+                            eTurn = MoveTurn.Antagonist;
+                        }
+                        else if (iSumResults == 0)
+                        {
+                            CardsToBank();
+                            eTurn = MoveTurn.Antagonist;
+                        }
+                        else
+                        {
+                            CardsToBank();
+                            TakeBank(rProtagonist);
+                            eTurn = MoveTurn.Protagonist;
+                        }
+                    }
+                    break;                
+            }
+        }                   
+        private void TakeBank(CPlayer rPlayer)
+        {
+            if (aBankCards.Count>0)
+            {
+                foreach (CCard rCard in aBankCards)
+                {
+                    rPlayer.GetCardToSource(rCard);
+                }
+            }
+            aBankCards.Clear();
+        }
+        private void CardsToBank()
+        {
+            switch (eStatus)
+            {
+                case PlayersStatus.Atack:
+                    aBankCards.Push(rAntagonist.AtackCard);
+                    aBankCards.Push(rProtagonist.AtackCard);                                        
+                    break;
+                case PlayersStatus.Support:
+                    aBankCards.Push(rAntagonist.SupportFirst);
+                    aBankCards.Push(rAntagonist.SupportSecond);
+                    aBankCards.Push(rAntagonist.AtackCard);
+                    aBankCards.Push(rProtagonist.SupportFirst);
+                    aBankCards.Push(rProtagonist.SupportSecond);
+                    aBankCards.Push(rProtagonist.AtackCard);                                        
+                    break;
+            }
+            rAntagonist.SupportFirst = null;
+            rAntagonist.SupportSecond = null;
+            rAntagonist.AtackCard = null;
+            rProtagonist.SupportFirst = null;
+            rProtagonist.SupportSecond = null;
+            rProtagonist.AtackCard = null;
+        }
+        
+        
+        
     
     }
 }
