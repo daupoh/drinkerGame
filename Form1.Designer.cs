@@ -372,6 +372,7 @@
             this.bQuickStart.TabIndex = 38;
             this.bQuickStart.Text = "Быстрый старт";
             this.bQuickStart.UseVisualStyleBackColor = true;
+            this.bQuickStart.Click += new System.EventHandler(this.bQuickStart_Click);
             // 
             // bSaveSettings
             // 
@@ -381,6 +382,7 @@
             this.bSaveSettings.TabIndex = 37;
             this.bSaveSettings.Text = "Сохранить изменения";
             this.bSaveSettings.UseVisualStyleBackColor = true;
+            this.bSaveSettings.Click += new System.EventHandler(this.bSaveSettings_Click);
             // 
             // bCancelSettings
             // 
@@ -391,6 +393,7 @@
             this.bCancelSettings.TabIndex = 36;
             this.bCancelSettings.Text = "Отменить изменения";
             this.bCancelSettings.UseVisualStyleBackColor = true;
+            this.bCancelSettings.Click += new System.EventHandler(this.bCancelSettings_Click);
             // 
             // bChangeDecks
             // 
@@ -569,7 +572,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(764, 536);
+            this.ClientSize = new System.Drawing.Size(764, 535);
             this.Controls.Add(this.gbControlPanel);
             this.Controls.Add(this.rSettingsGroupBox);
             this.Controls.Add(this.gbGame);

@@ -62,7 +62,7 @@ namespace DrinkerGame
             this.iCard = iCard;
             this.iCardImageColumn = iCardImageColumn;
 
-            Image rImg = Properties.Resources.cardsGrid;
+            Image rImg = Properties.Resources.cards;
             rCardImage = new Bitmap(rImg);            
         }
         public int Compare(CCard rCard)
