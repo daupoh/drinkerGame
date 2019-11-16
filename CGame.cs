@@ -10,8 +10,8 @@ namespace DrinkerGame
 {
     class CGame
     {
-        int iGameSpeedMod;        
-        enum MoveTurn
+        int iGameSpeedMod;
+        public enum MoveTurn
         {
             Protagonist,Antagonist,Game
         }
@@ -47,7 +47,7 @@ namespace DrinkerGame
                 }
                 else
                 {
-                    rProtagonist.GetCardToSource(aCards[i]);
+                    rProtagonist.GetCardToPool(aCards[i]);
                 }
             }
             aBankCards.Clear();
@@ -137,11 +137,25 @@ namespace DrinkerGame
                 return eStatus;
             }
         }
+        public MoveTurn Turn
+        {
+            get
+            {
+                return eTurn;
+            }
+        }
         public void Move()
         {
+            Console.WriteLine("Prot Pool " + rProtagonist.CountOfPool.ToString());
+            Console.WriteLine("Prot Source " + rProtagonist.CountOfSource.ToString());
+            Console.WriteLine("At Pool " + rAntagonist.CountOfPool.ToString());
+            Console.WriteLine("At Source " + rAntagonist.CountOfSource.ToString());
+            Console.WriteLine("Bank " + aBankCards.Count);
+            Console.WriteLine("Turn is " + eTurn.ToString());
+            Console.WriteLine("Status is " + eStatus.ToString());
             switch (eTurn)
-            {
-                case MoveTurn.Protagonist:
+            {                
+                case MoveTurn.Protagonist:                    
                     PlayerMove(rProtagonist);   
                     break;
                 case MoveTurn.Antagonist:
@@ -153,7 +167,7 @@ namespace DrinkerGame
             }
         }
         private void PlayerMove(CPlayer rPlayer)
-        {
+        {            
             if (rPlayer.AtackCard == null)
             {
                 CCard rCard = rPlayer.TakeCard();
@@ -165,6 +179,7 @@ namespace DrinkerGame
                 {
                     rPlayer.AtackCard = rCard;
                     eStatus = PlayersStatus.Atack;
+                    eTurn = MoveTurn.Game;
                 }
             }
             else if (rPlayer.SupportFirst == null)
@@ -178,16 +193,18 @@ namespace DrinkerGame
                 else if (rSecondCard == null)
                 {
                     rPlayer.SupportFirst = rFirstCard;
-                    eStatus = PlayersStatus.GameOver;
+                    eStatus = PlayersStatus.GameOver;                    
                 }
                 else
                 {
                     rPlayer.SupportFirst = rFirstCard;
                     rPlayer.SupportSecond = rSecondCard;
                     eStatus = PlayersStatus.Support;
+                    eTurn = MoveTurn.Game;
                 }
+                
             }
-            eTurn = MoveTurn.Game;
+            
         }
         private void GameMove()
         {

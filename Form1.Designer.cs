@@ -55,7 +55,7 @@
             this.pbSourceProtagonist = new System.Windows.Forms.PictureBox();
             this.gbPoolProtagonist = new System.Windows.Forms.GroupBox();
             this.pbPoolProtagonist = new System.Windows.Forms.PictureBox();
-            this.rSettingsGroupBox = new System.Windows.Forms.GroupBox();
+            this.gbSettings = new System.Windows.Forms.GroupBox();
             this.bQuickStart = new System.Windows.Forms.Button();
             this.bSaveSettings = new System.Windows.Forms.Button();
             this.bCancelSettings = new System.Windows.Forms.Button();
@@ -95,7 +95,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbSourceProtagonist)).BeginInit();
             this.gbPoolProtagonist.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbPoolProtagonist)).BeginInit();
-            this.rSettingsGroupBox.SuspendLayout();
+            this.gbSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCountOfDecks)).BeginInit();
             this.gbControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSpeedOfGame)).BeginInit();
@@ -342,27 +342,27 @@
             this.pbPoolProtagonist.TabIndex = 4;
             this.pbPoolProtagonist.TabStop = false;
             // 
-            // rSettingsGroupBox
+            // gbSettings
             // 
-            this.rSettingsGroupBox.Controls.Add(this.bQuickStart);
-            this.rSettingsGroupBox.Controls.Add(this.bSaveSettings);
-            this.rSettingsGroupBox.Controls.Add(this.bCancelSettings);
-            this.rSettingsGroupBox.Controls.Add(this.bChangeDecks);
-            this.rSettingsGroupBox.Controls.Add(this.nudCountOfDecks);
-            this.rSettingsGroupBox.Controls.Add(this.lblCountOfDecks);
-            this.rSettingsGroupBox.Controls.Add(this.cbCardsType);
-            this.rSettingsGroupBox.Controls.Add(this.lblCardsType);
-            this.rSettingsGroupBox.Controls.Add(this.bChangeNames);
-            this.rSettingsGroupBox.Controls.Add(this.lblAntagonistName);
-            this.rSettingsGroupBox.Controls.Add(this.lblProtagonistName);
-            this.rSettingsGroupBox.Controls.Add(this.tbAntagonistName);
-            this.rSettingsGroupBox.Controls.Add(this.tbProtagonistName);
-            this.rSettingsGroupBox.Location = new System.Drawing.Point(231, 363);
-            this.rSettingsGroupBox.Name = "rSettingsGroupBox";
-            this.rSettingsGroupBox.Size = new System.Drawing.Size(521, 163);
-            this.rSettingsGroupBox.TabIndex = 1;
-            this.rSettingsGroupBox.TabStop = false;
-            this.rSettingsGroupBox.Text = "Настройки";
+            this.gbSettings.Controls.Add(this.bQuickStart);
+            this.gbSettings.Controls.Add(this.bSaveSettings);
+            this.gbSettings.Controls.Add(this.bCancelSettings);
+            this.gbSettings.Controls.Add(this.bChangeDecks);
+            this.gbSettings.Controls.Add(this.nudCountOfDecks);
+            this.gbSettings.Controls.Add(this.lblCountOfDecks);
+            this.gbSettings.Controls.Add(this.cbCardsType);
+            this.gbSettings.Controls.Add(this.lblCardsType);
+            this.gbSettings.Controls.Add(this.bChangeNames);
+            this.gbSettings.Controls.Add(this.lblAntagonistName);
+            this.gbSettings.Controls.Add(this.lblProtagonistName);
+            this.gbSettings.Controls.Add(this.tbAntagonistName);
+            this.gbSettings.Controls.Add(this.tbProtagonistName);
+            this.gbSettings.Location = new System.Drawing.Point(231, 363);
+            this.gbSettings.Name = "gbSettings";
+            this.gbSettings.Size = new System.Drawing.Size(521, 163);
+            this.gbSettings.TabIndex = 1;
+            this.gbSettings.TabStop = false;
+            this.gbSettings.Text = "Настройки";
             // 
             // bQuickStart
             // 
@@ -442,6 +442,7 @@
             this.cbCardsType.Name = "cbCardsType";
             this.cbCardsType.Size = new System.Drawing.Size(153, 21);
             this.cbCardsType.TabIndex = 32;
+            this.cbCardsType.SelectedIndex = 0;
             // 
             // lblCardsType
             // 
@@ -572,9 +573,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(764, 535);
+            this.ClientSize = new System.Drawing.Size(764, 536);
             this.Controls.Add(this.gbControlPanel);
-            this.Controls.Add(this.rSettingsGroupBox);
+            this.Controls.Add(this.gbSettings);
             this.Controls.Add(this.gbGame);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(780, 574);
@@ -601,8 +602,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbSourceProtagonist)).EndInit();
             this.gbPoolProtagonist.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbPoolProtagonist)).EndInit();
-            this.rSettingsGroupBox.ResumeLayout(false);
-            this.rSettingsGroupBox.PerformLayout();
+            this.gbSettings.ResumeLayout(false);
+            this.gbSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCountOfDecks)).EndInit();
             this.gbControlPanel.ResumeLayout(false);
             this.gbControlPanel.PerformLayout();
@@ -616,7 +617,7 @@
         private System.Windows.Forms.GroupBox gbGame;
         private System.Windows.Forms.GroupBox gbAntagonist;
         private System.Windows.Forms.GroupBox gbProtagonist;
-        private System.Windows.Forms.GroupBox rSettingsGroupBox;
+        private System.Windows.Forms.GroupBox gbSettings;
         private System.Windows.Forms.GroupBox gbSourceAntagonist;
         private System.Windows.Forms.GroupBox gbPoolAntagonist;
         private System.Windows.Forms.GroupBox gbSourceProtagonist;
