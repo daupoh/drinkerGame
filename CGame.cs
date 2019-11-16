@@ -22,7 +22,7 @@ namespace DrinkerGame
         MoveTurn eTurn;
         PlayersStatus eStatus;
         CPlayer rAntagonist, rProtagonist;      
-        Stack<CCard> aBankCards = new Stack<CCard>();
+        readonly Stack<CCard> aBankCards = new Stack<CCard>();
         CDeck rDeck;
         
         public CGame()
