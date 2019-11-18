@@ -13,9 +13,31 @@ namespace DrinkerGame
         readonly Stack<CCard> aPoolCards = new Stack<CCard>();
         readonly Stack<CCard> aSourceCards = new Stack<CCard>();
         CCard rAtackCard, rSupportCardFirst, rSupportCardSecond;
-        public CPlayer(string sName)
+        public string Name
         {
-            Name = sName;
+            get
+            {
+                return sName;
+            }
+            set
+            {
+                Assert.IsTrue(value.Length > 0);
+                sName = value;
+            }
+        }
+        public int CountOfPool
+        {
+            get
+            {
+                return aPoolCards.Count;
+            }
+        }
+        public int CountOfSource
+        {
+            get
+            {
+                return aSourceCards.Count;
+            }
         }
         public CCard AtackCard
         {
@@ -50,12 +72,17 @@ namespace DrinkerGame
                 rSupportCardSecond = value;
             }
         }
-        public void GetCardToPool(CCard rCard)
+        public CPlayer(string sName)
+        {
+            Name = sName;
+        }
+       
+        public void TakeCardToPool(CCard rCard)
         {
             Assert.IsTrue(rCard != null);
             aPoolCards.Push(rCard);
         }
-        public CCard TakeCard()
+        public CCard GetCard()
         {
             CCard rCard = null;
             if (aPoolCards.Count>0)
@@ -73,41 +100,17 @@ namespace DrinkerGame
             }            
             return rCard;
         }
-        public void GetCardToSource(CCard rCard)
+        public void TakeCardToSource(CCard rCard)
         {
             Assert.IsTrue(rCard != null);
             aSourceCards.Push(rCard);
         }
-        public string Name
-        {
-            get
-            {
-                return sName;
-            }
-            set
-            {
-                Assert.IsTrue(value.Length>0);
-                sName = value;
-            }
-        }
+      
         public void ClearCards()
         {
             aPoolCards.Clear();
             aSourceCards.Clear();
         }
-        public int CountOfPool
-        {
-            get 
-            {
-                return aPoolCards.Count;
-            }
-        }
-        public int CountOfSource
-        {
-            get
-            {
-                return aSourceCards.Count;
-            }
-        }
+      
     }
 }

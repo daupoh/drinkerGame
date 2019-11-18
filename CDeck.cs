@@ -36,7 +36,19 @@ namespace DrinkerGame
                 iCountOfDecks = value;
             }
         }
-        
+        public int Type
+        {
+            get
+            {
+                return (int)eType;
+            }
+            set
+            {
+                Assert.IsTrue(value < 3);
+                eType = (TypeOfDeck)value;
+            }
+        }
+
         public CCard[] GenerateDeck()
         {
             CCard[] aCards=null;
@@ -51,18 +63,7 @@ namespace DrinkerGame
             return  aCards;
         }
       
-        public int Type
-        {
-            get
-            {
-                return (int)eType;
-            }
-            set
-            {
-                Assert.IsTrue(value < 3);
-                eType = (TypeOfDeck)value;
-            }
-        }
+    
     }
 }
 

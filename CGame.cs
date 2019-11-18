@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 namespace DrinkerGame
 {
     class CGame
-    {
-        int iGameSpeedMod;
+    {       
         public enum MoveTurn
         {
             Protagonist,Antagonist,Game
@@ -24,36 +23,6 @@ namespace DrinkerGame
         CPlayer rAntagonist, rProtagonist;      
         readonly Stack<CCard> aBankCards = new Stack<CCard>();
         CDeck rDeck;
-        
-        public CGame()
-        {
-            PrepareGame("Протагонист", "Антагонист", 0, 1);            
-        }
-        public void PrepareGame(string ProtagonistName, string AntagonistName,
-            int iTypeOfDecks, int iCountOfDecks)
-        {
-            rAntagonist = new CPlayer(AntagonistName);
-            rProtagonist = new CPlayer(ProtagonistName);
-            rDeck = new CDeck(iTypeOfDecks, iCountOfDecks);
-            GameSpeed = 1;
-            CCard[] aCards = rDeck.GenerateDeck();
-            rAntagonist.ClearCards();
-            rProtagonist.ClearCards();
-            for (int i = 0; i < aCards.Length; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    rAntagonist.GetCardToPool(aCards[i]);
-                }
-                else
-                {
-                    rProtagonist.GetCardToPool(aCards[i]);
-                }
-            }
-            aBankCards.Clear();
-            eTurn = MoveTurn.Protagonist;
-            eStatus = PlayersStatus.NoStatus;
-        }        
         public string ProtagonistName
         {
             get
@@ -98,18 +67,6 @@ namespace DrinkerGame
                 rDeck.CountOfDecks = value;
             }
         }
-        public int GameSpeed
-        {
-            get
-            {
-                return iGameSpeedMod;
-            }
-            set
-            {
-                Assert.IsTrue(value > 0 && value <= 100);
-                iGameSpeedMod = value;
-            }
-        }
         public Bitmap FaceDownCard
         {
             get
@@ -129,7 +86,7 @@ namespace DrinkerGame
                 aCounts[4] = aBankCards.Count;
                 return aCounts;
             }
-        }  
+        }
         public PlayersStatus Status
         {
             get
@@ -144,6 +101,35 @@ namespace DrinkerGame
                 return eTurn;
             }
         }
+        public CGame()
+        {
+            PrepareGame("Протагонист", "Антагонист", 0, 1);            
+        }
+        public void PrepareGame(string sProtagonistName, string sAntagonistName,
+            int iTypeOfDecks, int iCountOfDecks)
+        {
+            rAntagonist = new CPlayer(sAntagonistName);
+            rProtagonist = new CPlayer(sProtagonistName);
+            rDeck = new CDeck(iTypeOfDecks, iCountOfDecks);           
+            CCard[] aCards = rDeck.GenerateDeck();
+            rAntagonist.ClearCards();
+            rProtagonist.ClearCards();
+            for (int i = 0; i < aCards.Length; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    rAntagonist.TakeCardToPool(aCards[i]);
+                }
+                else
+                {
+                    rProtagonist.TakeCardToPool(aCards[i]);
+                }
+            }
+            aBankCards.Clear();
+            eTurn = MoveTurn.Protagonist;
+            eStatus = PlayersStatus.NoStatus;
+        }      
+     
         public void Move()
         {
             Console.WriteLine("Prot Pool " + rProtagonist.CountOfPool.ToString());
@@ -170,7 +156,7 @@ namespace DrinkerGame
         {            
             if (rPlayer.AtackCard == null)
             {
-                CCard rCard = rPlayer.TakeCard();
+                CCard rCard = rPlayer.GetCard();
                 if (rCard == null)
                 {
                     eStatus = PlayersStatus.GameOver;
@@ -184,8 +170,8 @@ namespace DrinkerGame
             }
             else if (rPlayer.SupportFirst == null)
             {
-                CCard rFirstCard = rPlayer.TakeCard(),
-                    rSecondCard = rPlayer.TakeCard();
+                CCard rFirstCard = rPlayer.GetCard(),
+                    rSecondCard = rPlayer.GetCard();
                 if (rFirstCard == null)
                 {
                     eStatus = PlayersStatus.GameOver;
@@ -280,7 +266,7 @@ namespace DrinkerGame
             {
                 foreach (CCard rCard in aBankCards)
                 {
-                    rPlayer.GetCardToSource(rCard);
+                    rPlayer.TakeCardToSource(rCard);
                 }
             }
             aBankCards.Clear();
@@ -309,10 +295,6 @@ namespace DrinkerGame
             rProtagonist.SupportSecond = null;
             rProtagonist.AtackCard = null;
         }
-        
-        
-        
-    
     }
 }
 

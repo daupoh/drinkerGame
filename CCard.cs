@@ -9,7 +9,6 @@ namespace DrinkerGame
         readonly Bitmap rCardImage;
         const int OFFSET_X = 7, OFFSET_Y = 6, FREE_SPACE = 8, 
             WIDTH = 65, HEIGHT = 100;
-        const string FILE_NAME = "cards.png";
         enum CardSuit
         {
             Hearts,Diamonds, Clubs, Spades, Special
@@ -41,50 +40,30 @@ namespace DrinkerGame
                 return CutImage(rCardImage);
             }
         }
-        private Bitmap CutImage(Bitmap src)
-        {
-            int dx = OFFSET_X + iCardImageColumn*FREE_SPACE + iCardImageColumn * WIDTH
-                , dy = OFFSET_Y + iSuit*FREE_SPACE + iSuit * HEIGHT;
-            Rectangle rect = new Rectangle(dx, dy, WIDTH, HEIGHT);
-            Bitmap bmp = new Bitmap(src.Width, src.Height); //создаем битмап
-            Graphics g = Graphics.FromImage(bmp);
-            g.DrawImage(src, 0, 0, rect, GraphicsUnit.Pixel); //перерисовываем с источника по координатам
-            return bmp;
-        }
         public static CCard FaceDownCard()
         {
             return new CCard(4, 4, 0, 0);
         }
-        private CCard(int iSuit, int iType, int iCard, int iCardImageColumn)
-        {
-            this.iSuit = iSuit;
-            this.iType = iType;
-            this.iCard = iCard;
-            this.iCardImageColumn = iCardImageColumn;
-
-            Image rImg = Properties.Resources.cards;
-            rCardImage = new Bitmap(rImg);            
-        }
         public int Compare(CCard rCard)
         {
             int iResultOfComprassion = -1;
-            if (iType>rCard.iType)
+            if (iType > rCard.iType)
             {
                 iResultOfComprassion = 1;
             }
             else if (iType == rCard.iType)
             {
                 switch (iType)
-                {                    
-                    case 3: iResultOfComprassion = 0;  break;
+                {
+                    case 3: iResultOfComprassion = 0; break;
                     default:
-                        if (iCard>rCard.iCard)
+                        if (iCard > rCard.iCard)
                         {
                             iResultOfComprassion = 1;
                         }
                         else if (iCard == rCard.iCard)
                         {
-                           iResultOfComprassion = 0;
+                            iResultOfComprassion = 0;
                         }
                         break;
                 }
@@ -92,8 +71,8 @@ namespace DrinkerGame
             return iResultOfComprassion;
         }
         public static CCard[] BuildDeck36(int iCountDecks)
-        {            
-            CCard[] aCards = new CCard[36*iCountDecks];
+        {
+            CCard[] aCards = new CCard[36 * iCountDecks];
             int iInd = 0;
             for (int k = 0; k < iCountDecks; k++)
             {
@@ -118,6 +97,28 @@ namespace DrinkerGame
             }
             return StirCards(aCards);
         }
+        private Bitmap CutImage(Bitmap src)
+        {
+            int dx = OFFSET_X + iCardImageColumn*FREE_SPACE + iCardImageColumn * WIDTH
+                , dy = OFFSET_Y + iSuit*FREE_SPACE + iSuit * HEIGHT;
+            Rectangle rect = new Rectangle(dx, dy, WIDTH, HEIGHT);
+            Bitmap bmp = new Bitmap(src.Width, src.Height); //создаем битмап
+            Graphics g = Graphics.FromImage(bmp);
+            g.DrawImage(src, 0, 0, rect, GraphicsUnit.Pixel); //перерисовываем с источника по координатам
+            return bmp;
+        }
+     
+        private CCard(int iSuit, int iType, int iCard, int iCardImageColumn)
+        {
+            this.iSuit = iSuit;
+            this.iType = iType;
+            this.iCard = iCard;
+            this.iCardImageColumn = iCardImageColumn;
+
+            Image rImg = Properties.Resources.cards;
+            rCardImage = new Bitmap(rImg);            
+        }
+    
         private static CCard[] StirCards(CCard[] aCards)
         {            
             Random rRand = new Random(aCards.Length);
